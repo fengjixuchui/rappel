@@ -16,7 +16,7 @@ CFLAGS_ARCH  =-Ddisplay=display_$(ARCH) -Dgen_elf=gen_elf_$(ARCH) -Dptrace_reset
 		-Dptrace_reset=ptrace_reset_$(ARCH) -Dptrace_collect_regs=ptrace_collect_regs_$(ARCH)
 
 CFLAGS_amd64 = -Dassemble=assemble_intel \
-		-DREGFMT=REGFMT64 -DARCH_INIT_PROC_INFO=AMD64_INIT_PROC_INFO 
+		-DREGFMT=REGFMT64 -DARCH_INIT_PROC_INFO=AMD64_INIT_PROC_INFO
 CFLAGS_x86   = -Dassemble=assemble_intel \
 		-DREGFMT=REGFMT32 -DARCH_INIT_PROC_INFO=X86_INIT_PROC_INFO \
 		-m32
@@ -26,7 +26,7 @@ CFLAGS_armv8 = -Dassemble=assemble_armv8 \
 		-DREGFMT=REGFMT64 -DARCH_INIT_PROC_INFO=ARMV8_INIT_PROC_INFO
 
 CFLAGS = -std=c11 -Wall -pedantic -Wno-gnu-empty-initializer $(CFLAGS_ARCH) $(CFLAGS_$(ARCH)) -O2 -fPIE -D_FORTIFY_SOURCE=2
-LDFLAGS = 
+LDFLAGS =
 INC = -Iinclude/ -Iarch/$(ARCH)/include
 LIBS = -ledit
 
@@ -62,11 +62,13 @@ obj:
 obj/%.o: %.c | obj
 	$(CC) $(CFLAGS) $(INC) -c $<  -o $@
 
-clean:
-	$(RM) obj/*.o *~ $(TARGET)
-	$(RM) obj/arch/$(ARCH)/*.o
+.PHONY: test
+test: $(TARGET)
+	$(MAKE) -C t $(ARCH)
 
-	-rmdir -p obj/arch/$(ARCH)
+clean:
+	$(RM) -r ./obj
+	$(RM) -r ./bin
 
 uninstall:
 	$(RM) -rf ~/.rappel

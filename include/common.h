@@ -13,6 +13,11 @@
 		}\
 	} while (0)
 
+// Round up to the nearest multiple
+// // https://gist.github.com/aslakhellesoy/1134482
+#define ROUNDUP(n, m) n >= 0 ? ((n + m - 1) / m) * m : (n / m) * m;
+
+
 struct options_t {
 	unsigned long start;
 	int raw;
@@ -66,4 +71,4 @@ void verbose_dump(
 void dump(
 		const uint8_t *const,
 		const size_t,
-		const unsigned long long);
+		const unsigned long);
